@@ -8,6 +8,7 @@ jQuery(document).ready(function($) {
 
         var formData = $("#frm_sms_form").serialize() + "&action=sms_ajax_handler&param=save_form";
 
+
         $.ajax({
             url: sms_ajax_url,
             data: formData,
@@ -34,42 +35,60 @@ jQuery(document).ready(function($) {
             }
         });
     });
-    // if(jQuery("#tbl-student-table").length>0)
-    //     {
-    //         load_contact();
-    //     }
+    
+    
+
+        load_contact();
+    
+        
     
 });
 
-// function load_contact()
-// {
-//     var formData= "&action=sms_ajax_handler&param=load_contact";
-//     var contactHTML="";
-//     jQuery.ajax({
-//         url: sms_ajax_url,
-//         data: formData,
-//         method: "GET",
-//         success: function(){
-//             var data=jQuery.parseJSON(response);
-//             if(data.status)
-//                 {
-//                    jQuery.each(data.data, function(index,contact){
-//                     contactHTML+="<tr>";
-//                     contactHTML+="<td>"+contact.id+"</td";
-//                     contactHTML+="<td>"+contact.name+"</td";
-//                     contactHTML+="<td>"+contact.email+"</td";
-//                     contactHTML+="<td>"+contact.gender+"</td";
-//                     contactHTML+="<td>"+contact.phone_no+"</td";
-//                     contactHTML+='<a class="btn-edit">Edit</a> <a class="btn-view">View</a> <a class="btn-delete">Delete</a>';
-//                     contactHTML+="</tr>";
-//                    }); 
-//                    jQuery("tbl-student-table").html(contactHTML);
-//                 }
-//         },
-//         error: function()
-//         {
+function load_contact() {
+    var formData = "&action=sms_ajax_handler&param=load_contact";
+    var contactHTML = "";
 
-//         }
-//     });
-// }
+    // Destroy existing DataTable instance
+    if (jQuery.fn.DataTable.isDataTable("#tbl-student-table")) {
+        jQuery("#tbl-student-table").DataTable().destroy();
+    }
+
+    jQuery.ajax({
+        url: sms_ajax_url,
+        data: formData,
+        method: "GET",
+        success: function(response) {
+            console.log(response);  // Add logging to see the raw response
+            var data = jQuery.parseJSON(response);
+            if (data.status) {
+                jQuery.each(data.data, function(index, contact) {
+                    contactHTML += "<tr>";
+                    contactHTML += "<td>" + contact.id + "</td>";
+                    contactHTML += "<td>" + contact.name + "</td>";
+                    contactHTML += "<td>" + contact.email + "</td>";
+                    contactHTML += "<td>" + contact.gender + "</td>";
+                    contactHTML += "<td>" + contact.phone_no + "</td>";
+                    contactHTML += '<td><a href="admin.php?page=contact-management&action=edit&id='+contact.id+'" class="btn-edit">Edit</a> <a href="admin.php?page=contact-management&action=view&id='+contact.id+'" class="btn-view">View</a> <a class="btn-delete btn-contact-delete" data-id="'+contact.id+'">Delete</a></td>';
+                    contactHTML += "</tr>";
+                });
+                jQuery("#tbl-student-table tbody").html(contactHTML);  // Use tbody to append rows
+
+                // Initialize DataTable after populating the table
+                jQuery("#tbl-student-table").DataTable();
+            }
+        },
+        error: function(error) {
+            console.error(error);  // Add error logging to debug failed AJAX requests
+        }
+    });
+}
+
+jQuery(document).ready(function() {
+    load_contact();
+});
+
+// jQuery(document).ready(function() {
+//     load_contact();
+// });
+
 
