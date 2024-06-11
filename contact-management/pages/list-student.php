@@ -100,7 +100,16 @@
                 </tr>
             </thead>
             <tbody>
-            <?php if(count($students)>0){
+            
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<!-- <?php if(count($students)>0){
                     foreach($students as $student)
                     {?>
                     <tr>
@@ -119,9 +128,4 @@
                 <?php
 
                     }
-                }?>
-                
-            </tbody>
-        </table>
-    </div>
-</div>
+                }?> -->
